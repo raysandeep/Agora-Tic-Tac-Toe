@@ -51,6 +51,7 @@ function startAgoraRTM(accountName, channelName) {
 							opponentSet(document.getElementById(data.data));
 						} else if (data.message == "Win") {
 							alert("Opponent won!");
+							startNewGame();
 						}
 					});
 
@@ -72,13 +73,18 @@ function startAgoraRTM(accountName, channelName) {
 					});
 
 					channel.on("MemberJoined", (memberId) => {
-						console.log(memberId);
-						document.getElementById("turn").innerHTML =
-							memberId + " had joined the room!";
-						init();
-						myTurn = "O";
-						document.getElementById("turn").innerHTML =
-							"Opponent's Turn!";
+						if (users.length == 2) {
+							console.log(memberId);
+							document.getElementById("turn").innerHTML =
+								memberId + " had joined the room!";
+							init();
+							myTurn = "O";
+							document.getElementById("turn").innerHTML =
+								"Opponent's Turn!";
+						} else {
+							channel.leave();
+							alert("too crowded call");
+						}
 					});
 
 					channel.on("MemberLeft", (memberId) => {
